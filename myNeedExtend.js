@@ -1157,6 +1157,8 @@ function MyNeedExtend() {
                 picImage.src = that.settings.loadImg;
                 picDiv.appendChild(picImage);
 
+                that.settings.img = picDiv;
+
                 //加载地图，并将地图上的内容放置到地图上面
                 var bufferImg = new Image();
                 bufferImg.src = obj.src;
@@ -1178,15 +1180,30 @@ function MyNeedExtend() {
                             picImage.style.height = "100%";
                         }else{
                             picDiv.style.height = "100%";
-                            picDiv.style.width = that.picWrapHeight*width/height;
+                            picDiv.style.width = that.picWrapHeight*width/height+"px";
                             picImage.style.width = "100%";
                             picImage.style.height = "100%";
                         }
                     }
 
+                    //计算出最大可放大比例
+                    var maxScale = width/that.picWrapWidth < 1?1:width/that.picWrapWidth;
+                    that.maxScale = maxScale * that.settings.maximum * that.settings.maxScale;
+
                     //初始化增加额外的内容调用
                     that.initMore(picDiv,obj);
 
+
+                    //给移动端和pc端绑定事件
+                    if (that.media === "pc") {
+                        //平面地图鼠标移动事件
+                        picDiv.addEventListener("mousedown", that.mouseDown);
+                        //平面地图鼠标滑轮放大缩小事件和移动端两指放大缩小
+                        picDiv.addEventListener("mousewheel", that.scrollFun, false);
+                        picDiv.addEventListener("DOMMouseScroll", that.scrollFun, false);//给火狐添加放大缩小事件
+                    } else if (that.media === "phone" || that.media === "pad") {
+                        picDiv.addEventListener("touchstart", that.mouseDown);
+                    }
                 };
             }
 
@@ -1249,11 +1266,10 @@ function MyNeedExtend() {
                 }
 
                 //设置禁止无限缩放
-                var maxScale = that.arr[that.settings.picIndex].scale * that.settings.maximum * that.settings.maxScale;
                 if (scale < that.settings.minScale) {
                     scale = that.settings.minScale;
-                } else if (scale > maxScale) {
-                    scale = maxScale;
+                } else if (scale > that.maxScale) {
+                    scale = that.maxScale;
                 }
 
                 //缩放以后更新图片的鼠标焦点
@@ -1266,7 +1282,7 @@ function MyNeedExtend() {
                 img.style.transform = "translate(" + offsetX + "px, " + offsetY + "px) " + "scale(" + scale + "," + scale + ") ";
 
                 //触发回调
-                that.scaleCallback(scale);
+                that.scaleCallback(that.settings.img);
 
                 //更新图片位置
                 that.updatePicPoistion(percentLeft, percentTop, e);
@@ -1292,11 +1308,10 @@ function MyNeedExtend() {
         that.mouseDown = function (event) {
             event.preventDefault();
             var e = event || window.event;
-            var img = this;
-            that.settings.img = img;
             that.settings.mouseDown.e = e;
             that.settings.img.style.transition = "none";
             that.settings.mouseDown.time = Number(new Date());
+            var img = that.settings.img;
 
             if (that.media === "pc") {
                 that.settings.mouseDown.x = e.clientX;
@@ -1374,36 +1389,9 @@ function MyNeedExtend() {
             var moveX = that.settings.mouseMove.x - that.settings.mouseDown.x;
             var moveY = that.settings.mouseMove.y - that.settings.mouseDown.y;
 
-            //移动图片时，处理是移动整个盒子，还是图片
-            var changePicWrap = function (scale) {
-                that.ul.style.transition = "none";
-                var percentX;
-                var changeOffsetX = moveX + that.settings.mouseDown.offsetX;
-
-                if (that.picWrap.offsetWidth >= img.offsetWidth * scale) {
-                    //如果没有放大，直接移动的是图片列表外部的框体
-                    percentX = moveX;
-                    //设置只修改y轴
-                    img.style.transform = "translate(" + that.settings.mouseDown.offsetX + "px," + (moveY + that.settings.mouseDown.offsetY) + "px) " + "scale(" + scale + "," + scale + ")";
-                } else {
-                    //图片宽度超过盒子宽度的情况下，尽量保证页面显示最多面积的图片
-                    if (img.offsetWidth * scale / 2 + changeOffsetX < that.picWrap.offsetWidth / 2) {
-                        //移动后图片右侧出现空白面积
-                        percentX = img.offsetWidth * scale / 2 + changeOffsetX - that.picWrap.offsetWidth / 2;
-                    } else if (changeOffsetX + that.picWrap.offsetWidth / 2 > img.offsetWidth * scale / 2) {
-                        //移动后图片左侧出现空白面积
-                        percentX = that.picWrap.offsetWidth / 2 + changeOffsetX - img.offsetWidth * scale / 2;
-                    } else {
-                        img.style.transform = "translate(" + (changeOffsetX) + "px," + (moveY + that.settings.mouseDown.offsetY) + "px) " + "scale(" + scale + "," + scale + ")";
-                        percentX = 0;
-                    }
-                }
-
-                that.ul.style.left = -that.settings.picIndex * that.picWrapWidth + percentX + "px";
-
-            };
-
-            changePicWrap(that.settings.mouseDown.scaleX);
+            //修改图片的位置
+            img.style.transition = "none";
+            img.style.transform = "translate(" + (moveX+that.settings.mouseDown.offsetX) + "px," + (moveY + that.settings.mouseDown.offsetY) + "px) " + "scale(" + that.settings.mouseDown.scaleX + "," + that.settings.mouseDown.scaleX + ")";
         };
 
         //两指移动事件
@@ -1433,11 +1421,10 @@ function MyNeedExtend() {
             var scale = e.scale * data.distance / e.distance;
 
             //设置禁止无限缩放
-            var maxScale = that.arr[that.settings.picIndex].scale * that.settings.maximum * that.settings.maxScale;
             if (scale < that.settings.minScale) {
                 scale = that.settings.minScale;
-            } else if (scale > maxScale) {
-                scale = maxScale;
+            } else if (scale > that.maxScale) {
+                scale = that.maxScale;
             }
 
             //缩放以后更新图片的鼠标焦点
@@ -1447,7 +1434,7 @@ function MyNeedExtend() {
             that.settings.img.style.transform = "translate(" + offsetX + "px, " + offsetY + "px) " + "scale(" + scale + "," + scale + ") ";
 
             //触发回调
-            that.scaleCallback(scale);
+            that.scaleCallback(that.settings.img);
         };
 
         //鼠标抬起事件
@@ -1483,29 +1470,11 @@ function MyNeedExtend() {
 
             //移动完处理问题
             that.settings.img.style.transition = that.settings.picTransition;
-            that.ul.style.transition = that.settings.picWrapTransition;
+            //that.ul.style.transition = that.settings.picWrapTransition;
             var translate = that.settings.img.style.transform.match(/translate\((\S*)px,\s(\S*)px\)/);
             var scale = parseInt(that.settings.img.style.transform.match(/scale\((\S*),\s(\S*)\)/)[1] * 10000) / 10000;
             var offsetX = parseFloat(translate[1]);
             var offsetY = parseFloat(translate[2]);
-
-            //处理是否切换页面
-            var percentX = parseFloat(that.ul.style.left) + that.settings.picIndex * that.picWrapWidth;
-            if (Math.abs(percentX) >= that.picWrapWidth * parseFloat(that.settings.canMovePercent) / 100 ||
-                (that.settings.mouseUp.time - that.settings.mouseDown.time <= 250) && (Math.abs(percentX) >= that.picWrapWidth * 0.1)
-            ) {
-                if (percentX < 0) {
-                    //向右切换图片
-                    that.changePic("right");
-                } else {
-                    //向左切换图片
-                    that.changePic("left");
-                }
-            } else {
-                setTimeout(function () {
-                    that.ul.style.left = -that.settings.picIndex * that.picWrapWidth + "px";
-                }, 0)
-            }
 
             //更新图片的位置
             function updatePoistion(scale) {
@@ -1564,7 +1533,7 @@ function MyNeedExtend() {
                 //更新图片的位置
                 img.style.transform = "translate(" + offsetX + "px," + offsetY + "px) scale(" + scale + "," + scale + ") ";
                 var twoTouch = that.settings.twoTouch;
-                var maxScale = parseInt(that.arr[that.settings.picIndex].scale * that.settings.maxScale * 10000) / 10000;
+                var maxScale = (that.maxScale * 10000) / 10000 / that.settings.maximum;//图片能够显示的最大放大尺度
 
                 //计算出延迟后修改的内容
                 if (scale < 1) {
@@ -1590,7 +1559,7 @@ function MyNeedExtend() {
                 clearTimeout(that.settings.timeOut);
                 that.settings.timeOut = setTimeout(function () {
                     img.style.transform = "translate(" + offsetX + "px," + offsetY + "px) scale(" + scale + "," + scale + ") ";
-                    that.touchendCallback(offsetY, offsetX, scale);
+                    that.touchendCallback(that.settings.img);
                 }, that.settings.updateTimeOut);
             }
         };
@@ -1628,7 +1597,7 @@ function MyNeedExtend() {
             //console.log(scale);
         };
 
-        //图片操作完成后的回调方法
+        //图片缩放完成后的回调方法
         that.touchendCallback = function (offsetY, offsetX, scale) {
             //console.log(offsetY, offsetX, scale);
         }
