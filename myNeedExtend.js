@@ -1139,7 +1139,6 @@ function MyNeedExtend() {
                 that.picWrapLeft = that.picWrapLeft || that.picWrap.parentNode.offsetLeft;//图片外框的距离左侧距离
                 that.picWrapTop = that.picWrapTop || that.picWrap.parentNode.offsetTop;//图片外框距离顶部距离
                 that.prefix = my.getPrefix();
-                console.log(that.picWrapLeft,that.picWrapTop);
 
                 picWrap.style.overflow = "hidden";
                 picWrap.style.cssText += that.prefix + "user-select:none;";
@@ -1163,7 +1162,6 @@ function MyNeedExtend() {
                 //加载地图，并将地图上的内容放置到地图上面
                 var bufferImg = new Image();
                 bufferImg.src = obj.src;
-                console.log(obj,obj.src);
                 bufferImg.onload = function () {
                     picImage.src = obj.src;
                     //获取图片的真实高度和宽度
