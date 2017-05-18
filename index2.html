@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>图片列表生成交互组件</title>
+    <style>
+        * {
+            margin: 0;
+            border: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        #div {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="div"></div>
+<script src="myNeedExtend.js"></script>
+<script>
+    var myExtend = new MyNeedExtend();
+    /*var image = new myExtend.ImageView({picWrapTransition:"all .3s",picIndex:2});
+    image.init(null, document.getElementById("div"), [{src: "image/test/1.jpg"}, {src: "image/test/2.jpg"}, {src: "image/test/3.jpg"}, {src: "image/test/4.jpg"}, {src: "image/test/5.jpg"}, {src: "image/test/6.jpg"}, {src: "image/test/7.jpg"}, {src: "image/test/8.jpg"}, {src: "image/test/9.jpg"}, {src: "image/test/10.jpg"}, {src: "image/test/11.jpg"}]);*/
+
+    var div = new myExtend.DivImageView();
+    div.init(null,document.getElementById("div"),{
+        type: "plane",
+        name: "平面地图2",//切换按钮上面显示的名字
+        src: "./image/map.jpg",//平面地图背景地图地址
+        sceneMapId: "planeTwo",//当前场景的唯一下标
+        width: "950",//当前地图使用的地图的宽度
+        height: "703",//当前地图使用的地图的高度
+        data: [
+            {
+                sceneId: "v1",
+                pan: "153",
+                tilt: "220",
+                title: "第一个",
+                icon: {
+                    src: "http://static.oschina.net/uploads/space/2014/0820/112808_PWns_1187419.png",//图标地址
+                    width: "30",//图标宽度
+                    height: "30",//图标高度
+                    offsetWidth: "-15",//地理位置距离图标左上角的宽度
+                    offsetHeight: "-15",//地理位置距离图标左上角的高度
+                    imageOffsetWidth: "0",//图片向左偏移量
+                    imageOffsetHeight: "0"//图片向上的偏移量
+                }
+            },
+            {
+                sceneId: "v2",
+                pan: "338",
+                tilt: "107",
+                title: "第二个",
+                icon: {
+                    src: "http://static.oschina.net/uploads/space/2014/0820/112808_PWns_1187419.png",//图标地址
+                    width: "30",//图标宽度
+                    height: "30",//图标高度
+                    offsetWidth: "-15",//地理位置距离图标左上角的宽度
+                    offsetHeight: "-15",//地理位置距离图标左上角的高度
+                    imageOffsetWidth: "0",//图片向左偏移量
+                    imageOffsetHeight: "0"//图片向上的偏移量
+                }
+            },
+            {
+                sceneId: "v3",
+                pan: "310",
+                tilt: "466",
+                title: "第三个",
+                icon: {
+                    src: "http://static.oschina.net/uploads/space/2014/0820/112808_PWns_1187419.png",//图标地址
+                    width: "30",//图标宽度
+                    height: "30",//图标高度
+                    offsetWidth: "-15",//地理位置距离图标左上角的宽度
+                    offsetHeight: "-15",//地理位置距离图标左上角的高度
+                    imageOffsetWidth: "0",//图片向左偏移量
+                    imageOffsetHeight: "0"//图片向上的偏移量
+                }
+            },
+            {
+                sceneId: "v4",
+                pan: "704",
+                tilt: "222",
+                title: "第四个",
+                icon: {
+                    src: "http://static.oschina.net/uploads/space/2014/0820/112808_PWns_1187419.png",//图标地址
+                    width: "30",//图标宽度
+                    height: "30",//图标高度
+                    offsetWidth: "-15",//地理位置距离图标左上角的宽度
+                    offsetHeight: "-15",//地理位置距离图标左上角的高度
+                    imageOffsetWidth: "0",//图片向左偏移量
+                    imageOffsetHeight: "0"//图片向上的偏移量
+                }
+            },
+            {
+                sceneId: "v5",
+                pan: "459",
+                tilt: "352",
+                title: "第五个",
+                icon: {
+                    src: "http://static.oschina.net/uploads/space/2014/0820/112808_PWns_1187419.png",//图标地址
+                    width: "30",//图标宽度
+                    height: "30",//图标高度
+                    offsetWidth: "-15",//地理位置距离图标左上角的宽度
+                    offsetHeight: "-15",//地理位置距离图标左上角的高度
+                    imageOffsetWidth: "0",//图片向左偏移量
+                    imageOffsetHeight: "0"//图片向上的偏移量
+                }
+            }
+        ]
+    });
+    div.initMore = function (dom,obj) {
+        var width = parseFloat(dom.childNodes[0].naturalWidth);
+        var height = parseFloat(dom.childNodes[0].naturalHeight);
+        for(var i = 0; i<obj.data.length; i++){
+            (function (data) {
+                var pan = data.pan;
+                var tilt = data.tilt;
+                var title = data.title;
+                var icon = data.icon;
+                var sceneId = data.sceneId;
+                var scale = 1;
+                var left = pan / width * 100;
+                var top = tilt / height * 100;
+
+                var marker = document.createElement("img");
+                marker.src = icon.src;
+                marker.className = "markerIcon";
+                marker.style.cssText = "width:" + icon.width + "px; height:" + icon.height + "px; position:absolute; left:" + left + "%; top:" + top + "%; cursor:pointer; margin-left:" + icon.offsetWidth + "px; margin-top:" + icon.offsetHeight + "px; transform:scale(" + 1 / scale + "," + 1 / scale + ");";
+                marker.title = title;
+                dom.appendChild(marker);
+
+                //添加点击事件
+                marker.onclick = function () {
+                    alert(sceneId);
+                }
+            })(obj.data[i]);
+        }
+    };
+    div.scaleCallback = function (dom) {
+        var img = dom;
+        var translate = img.style.transform.match(/translate\((\S*)px,\s(\S*)px\)/);
+        var scale = img.style.transform.match(/scale\((\S*),\s(\S*)\)/);
+        var offsetX = parseFloat(translate[1]);
+        var offsetY = parseFloat(translate[2]);
+        var scaleX = parseFloat(scale[1]);
+
+
+        var arr = dom.getElementsByClassName("markerIcon");
+        for(var i = 0; i<arr.length; i++){
+            (function (i) {
+                arr[i].style.transition = "none";
+                arr[i].style.transform = "scale(" + 1 / scaleX + "," + 1 / scaleX + ")";
+                setTimeout(function () {
+                    arr[i].style.transition =  "all .3s";
+                })
+            })(i);
+        }
+    };
+    div.touchendCallback = function (dom) {
+        var img = dom;
+        var translate = img.style.transform.match(/translate\((\S*)px,\s(\S*)px\)/);
+        var scale = img.style.transform.match(/scale\((\S*),\s(\S*)\)/);
+        var offsetX = parseFloat(translate[1]);
+        var offsetY = parseFloat(translate[2]);
+        var scaleX = parseFloat(scale[1]);
+
+
+        var arr = dom.getElementsByClassName("markerIcon");
+        console.log(arr);
+        for(var i = 0; i<arr.length; i++){
+            arr[i].style.transform = "scale(" + 1 / scaleX + "," + 1 / scaleX + ")";
+        }
+    }
+
+    //alert(myExtend.getPrefix());
+</script>
+</body>
+</html>
