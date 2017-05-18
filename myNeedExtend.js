@@ -1136,9 +1136,10 @@ function MyNeedExtend() {
             function createDom() {
                 that.picWrapWidth = that.picWrap.parentNode.offsetWidth;////图片外框宽度
                 that.picWrapHeight = that.picWrap.parentNode.offsetHeight;//图片外框高度
-                that.picWrapLeft = that.picWrap.parentNode.offsetLeft;//图片外框的距离左侧距离
-                that.picWrapTop = that.picWrap.parentNode.offsetTop;//图片外框距离顶部距离
+                that.picWrapLeft = that.picWrapLeft || that.picWrap.parentNode.offsetLeft;//图片外框的距离左侧距离
+                that.picWrapTop = that.picWrapTop || that.picWrap.parentNode.offsetTop;//图片外框距离顶部距离
                 that.prefix = my.getPrefix();
+                console.log(that.picWrapLeft,that.picWrapTop);
 
                 picWrap.style.overflow = "hidden";
                 picWrap.style.cssText += that.prefix + "user-select:none;";
@@ -1162,6 +1163,7 @@ function MyNeedExtend() {
                 //加载地图，并将地图上的内容放置到地图上面
                 var bufferImg = new Image();
                 bufferImg.src = obj.src;
+                console.log(obj,obj.src);
                 bufferImg.onload = function () {
                     picImage.src = obj.src;
                     //获取图片的真实高度和宽度
@@ -1238,10 +1240,10 @@ function MyNeedExtend() {
 
             var imgWidth = img.offsetWidth;//图片实际宽度
             var imgHeight = img.offsetHeight;//图片实际高度
-            var picWrapWidth = that.picWrap.offsetWidth;//图片外框宽度
-            var picWrapHeight = that.picWrap.offsetHeight;//图片外框高度
-            var picWrapLeft = that.picWrap.offsetLeft;//图片外框的距离左侧距离
-            var picWrapTop = that.picWrap.offsetTop;//图片外框距离顶部距离
+            var picWrapWidth = that.picWrapWidth;//图片外框宽度
+            var picWrapHeight = that.picWrapHeight;//图片外框高度
+            var picWrapLeft = that.picWrapLeft;//图片外框的距离左侧距离
+            var picWrapTop = that.picWrapTop;//图片外框距离顶部距离
 
             //获取鼠标当前位置在图片的位置
             var mouseLeft = (imgWidth / 2 * scaleX - offsetX - picWrapWidth / 2) + (e.clientX - picWrapLeft);
