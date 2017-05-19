@@ -26,8 +26,9 @@
 <script>
     var myExtend = new MyNeedExtend();
     var dom = myExtend.touch(document.getElementById("div"));
-    console.log(dom.click(function () {
-        alert();
-    }));
+    dom.click(function () {
+        var media = myExtend.browserRedirect();
+        alert(media+"端触发了点击事件");
+    })
 </script>
 </html>
