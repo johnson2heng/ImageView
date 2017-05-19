@@ -13,6 +13,23 @@ function MyNeedExtend() {
     var hasOwn = class2type.hasOwnProperty;
     var trim = "".trim;
     var support = {};
+
+    function isArraylike(obj) {
+        var length = obj.length,
+            type = jQuery.type(obj);
+
+        if (type === "function" || jQuery.isWindow(obj)) {
+            return false;
+        }
+
+        if (obj.nodeType === 1 && length) {
+            return true;
+        }
+
+        return type === "array" || length === 0 ||
+            typeof length === "number" && length > 0 && ( length - 1 ) in obj;
+    }
+
     jQuery.fn = jQuery.prototype = {};
 
     jQuery.extend = jQuery.fn.extend = function () {
@@ -80,7 +97,7 @@ function MyNeedExtend() {
         return target;
     };
 
-    jQuery.extend({
+    var jquery_fun = {
 
         isReady: true,
 
@@ -364,7 +381,8 @@ function MyNeedExtend() {
         },
 
         now: Date.now
-    });
+    };
+    jQuery.extend(jquery_fun);
 
     this.jquery = jQuery;
 
@@ -389,8 +407,24 @@ function MyNeedExtend() {
 
                 document.removeEventListener("touchend", touchend);
             };
+            //设置手指触发事件
+            var touchstart = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = [];
+                var len = e.targetTouches.length;
+                for (var i = 0; i < len; i++) {
+                    (function () {
+                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                        that.touch.start.push(obj);
+                    })();
+                }
 
-            document.addEventListener("touchend", touchend);
+                document.addEventListener("touchend", touchend);
+            };
+
+            that.dom.addEventListener("touchstart", touchstart);
         };
 
         this.swipe = function () {
@@ -401,7 +435,7 @@ function MyNeedExtend() {
             console.log("doubleTap");
         };
 
-        this.init = function (dom, callback, fun) {
+        this.init = function (dom, fun, callback) {
             var that = this;
             //默认的配置选项
             this.settings = {
@@ -424,33 +458,20 @@ function MyNeedExtend() {
             that.dom = dom;
             that.callback = callback;
 
-            //设置手指触发事件
-            that.touchstart = function (event) {
-                var e = event || window.event;
-                e.preventDefault();
-                that.date.start = Number(new Date());
-                that.touch.start = [];
-                var len = e.targetTouches.length;
-                for(var i = 0; i<len; i++){
-                    (function () {
-                        var obj = my.jquery.extend(true,{},e.targetTouches[i]);
-                        that.touch.start.push(obj);
-                    })();
-                }
-
+            var arr = fun.split(",");
+            console.log(arr);
+            for(var i = 0; i<arr.length; i++){
                 //监听事件
-                if (that.arr.indexOf(fun) != -1) {
-                    that[fun]();
+                if (that.arr.indexOf(arr[i]) != -1) {
+                    that[arr[i]]();
                 }
-            };
-
-            that.dom.addEventListener("touchstart", that.touchstart);
+            }
 
         }
     };
 
     //添加pc设备的点击事件
-    this.addClickFun = function () {
+    this.AddClickFun = function () {
         var that = this;
         //默认的配置选项
         that.settings = {
@@ -531,19 +552,19 @@ function MyNeedExtend() {
             canMovePercent: "50%",//移动图片出现空白的百分比以后就会切换页面
             updateTimeOut: 100,//每次鼠标离开屏幕后，处理界面的延迟
             timeOut: null,//鼠标屏幕离开的延时器对象存储
-            changeBtn:{//pc端左右切换按钮样式
-                leftBtn:{//向左切换按钮
-                    src:"button/left.png",
-                    style:"position:absolute; top:50%; transform:translateY(-50%); width:50px; height:100px; cursor:pointer; z-index:1; left:0;"
+            changeBtn: {//pc端左右切换按钮样式
+                leftBtn: {//向左切换按钮
+                    src: "button/left.png",
+                    style: "position:absolute; top:50%; transform:translateY(-50%); width:50px; height:100px; cursor:pointer; z-index:1; left:0;"
                 },
-                rightBtn:{//向右切换按钮
-                    src:"button/right.png",
-                    style:"position:absolute; top:50%; transform:translateY(-50%); width:50px; height:100px; cursor:pointer; z-index:1; right:0;"
+                rightBtn: {//向右切换按钮
+                    src: "button/right.png",
+                    style: "position:absolute; top:50%; transform:translateY(-50%); width:50px; height:100px; cursor:pointer; z-index:1; right:0;"
                 },
-                changePic:"max-width:100%; max-height:100%; position:absolute; top:0; right:0; bottom:0; left:0; margin:auto; display:block;"
+                changePic: "max-width:100%; max-height:100%; position:absolute; top:0; right:0; bottom:0; left:0; margin:auto; display:block;"
             }
         };
-        that.settings = my.jquery.extend(true,{},settings,obj);
+        that.settings = my.jquery.extend(true, {}, settings, obj);
 
         //media 媒体类型 phone,pc,pad   picWrap 需要填充的标签div   arr 图片数据数组
         that.init = function (media, picWrap, arr) {
@@ -596,7 +617,7 @@ function MyNeedExtend() {
                 var len = arr.length;
                 //创建ul
                 that.ul = document.createElement("ul");
-                that.ul.style.cssText = that.settings.ulStyle+"transition:"+that.settings.picWrapTransition;
+                that.ul.style.cssText = that.settings.ulStyle + "transition:" + that.settings.picWrapTransition;
                 that.ul.style.width = len * that.picWrapWidth + "px";
                 picWrap.appendChild(that.ul);
 
@@ -1126,7 +1147,7 @@ function MyNeedExtend() {
             updateTimeOut: 100,//每次鼠标离开屏幕后，处理界面的延迟
             timeOut: null//鼠标屏幕离开的延时器对象存储
         };
-        that.settings = my.jquery.extend(true,{},settings,obj);
+        that.settings = my.jquery.extend(true, {}, settings, obj);
 
         //media 媒体类型 phone,pc,pad   picWrap 需要填充的标签div   arr 图片数据数组
         that.init = function (media, picWrap, obj) {
@@ -1169,29 +1190,29 @@ function MyNeedExtend() {
                     var height = bufferImg.naturalHeight;
 
                     //根据不同的情况设置div大小
-                    if(width < that.picWrapWidth && height < that.picWrapHeight){
-                        picDiv.style.width = width+"px";
-                        picDiv.style.height = height+"px";
-                    }else{
-                        if(width/height > that.picWrapWidth/that.picWrapHeight){
+                    if (width < that.picWrapWidth && height < that.picWrapHeight) {
+                        picDiv.style.width = width + "px";
+                        picDiv.style.height = height + "px";
+                    } else {
+                        if (width / height > that.picWrapWidth / that.picWrapHeight) {
                             picDiv.style.width = "100%";
-                            picDiv.style.height = that.picWrapWidth*height/width+"px";
+                            picDiv.style.height = that.picWrapWidth * height / width + "px";
                             picImage.style.width = "100%";
                             picImage.style.height = "100%";
-                        }else{
+                        } else {
                             picDiv.style.height = "100%";
-                            picDiv.style.width = that.picWrapHeight*width/height+"px";
+                            picDiv.style.width = that.picWrapHeight * width / height + "px";
                             picImage.style.width = "100%";
                             picImage.style.height = "100%";
                         }
                     }
 
                     //计算出最大可放大比例
-                    var maxScale = width/that.picWrapWidth < 1?1:width/that.picWrapWidth;
+                    var maxScale = width / that.picWrapWidth < 1 ? 1 : width / that.picWrapWidth;
                     that.maxScale = maxScale * that.settings.maximum * that.settings.maxScale;
 
                     //初始化增加额外的内容调用
-                    that.initMore(picDiv,obj);
+                    that.initMore(picDiv, obj);
 
 
                     //给移动端和pc端绑定事件
@@ -1391,7 +1412,7 @@ function MyNeedExtend() {
 
             //修改图片的位置
             img.style.transition = "none";
-            img.style.transform = "translate(" + (moveX+that.settings.mouseDown.offsetX) + "px," + (moveY + that.settings.mouseDown.offsetY) + "px) " + "scale(" + that.settings.mouseDown.scaleX + "," + that.settings.mouseDown.scaleX + ")";
+            img.style.transform = "translate(" + (moveX + that.settings.mouseDown.offsetX) + "px," + (moveY + that.settings.mouseDown.offsetY) + "px) " + "scale(" + that.settings.mouseDown.scaleX + "," + that.settings.mouseDown.scaleX + ")";
         };
 
         //两指移动事件
@@ -1602,6 +1623,33 @@ function MyNeedExtend() {
             //console.log(offsetY, offsetX, scale);
         }
     };
+    
+    //增加专用的交互事件
+    var touch_fun = {
+        click:function (fun) {
+             return this.each(this,function (index,dom) {
+                 if(my.browserRedirect() === "pc"){
+                     new my.AddClickFun().init(dom,fun);
+                 }else{
+                     new my.AddTouchFun().init(dom,"tap",fun);
+                 }
+             });
+        }
+    };
+
+    //生成类似于jq的类数组对象
+    this.touch = function (dom) {
+        var touch_obj = new Object();
+        if(my.isDom(dom)){
+            [].push.call(touch_obj,dom);
+        }else if(my.jquery.isArray(dom)){
+            [].push.apply(touch_obj,dom);
+        }
+
+        jQuery.extend(true,touch_obj,jquery_fun,touch_fun);
+
+        return touch_obj;
+    }
 }
 
 MyNeedExtend.prototype = {
@@ -1684,5 +1732,16 @@ MyNeedExtend.prototype = {
             }
         }
         return false;
+    },
+    //判断是否是一个dom对象
+    isDom: function (dom) {
+        var is_Dom = ( typeof HTMLElement === 'object' ) ?
+            function(obj){
+                return obj instanceof HTMLElement;
+            } :
+            function(obj){
+                return obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string';
+            }
+        return is_Dom(dom);
     }
 };
