@@ -20,14 +20,16 @@
     </style>
 </head>
 <body>
-    <div id="div"></div>
+    <div id="div">
+        <div style="width:400px; height:200px; background: red; margin:0 auto;"></div>
+    </div>
 </body>
 <script src="myNeedExtend.js"></script>
 <script>
     var myExtend = new MyNeedExtend();
     var dom = myExtend.touch(document.getElementById("div"));
-    console.log(dom.click(function () {
-        alert();
-    }));
+    dom.on("swipe",function () {
+        alert("1");
+    });
 </script>
 </html>
