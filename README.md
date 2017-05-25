@@ -1,4 +1,4 @@
-## ImageView() 仿微信图片查看方法是用
+# ImageView() 仿微信图片查看方法是用
 ----------------
 > 仿微信图片交互，支持pc端html5版本，支持移动端横竖屏切换，支持屏幕自适应。
 >* 首先实例化对象，var myExtend = new MyNeedExtend();
@@ -8,7 +8,7 @@
 >>2. 第二个值需要是获取的原生dom对象传入
 >>3. 第三个值是数组，例子[{src:"images/img.jpg"},{src:"images/img2.jpg"},...]
 
-## DivImageView() 仿微信图片查看方法是用
+# DivImageView() 仿微信图片查看方法是用
 ----------------
 > 针对ImageView一个扩展，可以在图片上放置额外内容。
 > 缺点，只能一次处理一张图片
