@@ -413,7 +413,6 @@ function MyNeedExtend() {
             that.callback = callback;
 
             var arr = fun.split(",");
-            console.log(arr);
             for (var i = 0; i < arr.length; i++) {
                 //监听事件
                 if (that.arr.indexOf(arr[i]) != -1) {
@@ -575,43 +574,179 @@ function MyNeedExtend() {
         };
 
         that.swipeLeft = function () {
-            console.log("swipeLeft");
+            var touchend = function (event) {
+                var e = event || window.event;
+                that.touch.end = e.changedTouches;
+                that.date.end = Number(new Date());
+                if (
+                    (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
+                    (that.touch.start.length === 1) &&
+                    (that.touch.end.length === 1) &&
+                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.verticalDistanceThreshold)&&
+                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) >= 315 ||
+                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) <= 45)
+                ) {
+                    that.callback.call(that.dom);
+                }
+
+                document.removeEventListener("touchend", touchend);
+            };
+            //设置手指触发事件
+            var touchstart = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = [];
+                var len = e.targetTouches.length;
+                for (var i = 0; i < len; i++) {
+                    (function () {
+                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                        that.touch.start.push(obj);
+                    })();
+                }
+
+                document.addEventListener("touchend", touchend);
+            };
+
+            that.dom.addEventListener("touchstart", touchstart);
         };
 
         that.swipeRight = function () {
-            console.log("swipeRight");
+            var touchend = function (event) {
+                var e = event || window.event;
+                that.touch.end = e.changedTouches;
+                that.date.end = Number(new Date());
+                if (
+                    (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
+                    (that.touch.start.length === 1) &&
+                    (that.touch.end.length === 1) &&
+                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.verticalDistanceThreshold)&&
+                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) >= 135 &&
+                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) <= 225)
+                ) {
+                    that.callback.call(that.dom);
+                }
+
+                document.removeEventListener("touchend", touchend);
+            };
+            //设置手指触发事件
+            var touchstart = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = [];
+                var len = e.targetTouches.length;
+                for (var i = 0; i < len; i++) {
+                    (function () {
+                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                        that.touch.start.push(obj);
+                    })();
+                }
+
+                document.addEventListener("touchend", touchend);
+            };
+
+            that.dom.addEventListener("touchstart", touchstart);
         };
 
         that.swipeUp = function () {
-            console.log("swipeUp");
+            var touchend = function (event) {
+                var e = event || window.event;
+                that.touch.end = e.changedTouches;
+                that.date.end = Number(new Date());
+                if (
+                    (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
+                    (that.touch.start.length === 1) &&
+                    (that.touch.end.length === 1) &&
+                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.horizontalDistanceThreshold)&&
+                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > 45 &&
+                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) < 135)
+                ) {
+                    that.callback.call(that.dom);
+                }
+
+                document.removeEventListener("touchend", touchend);
+            };
+            //设置手指触发事件
+            var touchstart = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = [];
+                var len = e.targetTouches.length;
+                for (var i = 0; i < len; i++) {
+                    (function () {
+                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                        that.touch.start.push(obj);
+                    })();
+                }
+
+                document.addEventListener("touchend", touchend);
+            };
+
+            that.dom.addEventListener("touchstart", touchstart);
         };
 
         that.swipeDown = function () {
-            console.log("swipeDown");
+            var touchend = function (event) {
+                var e = event || window.event;
+                that.touch.end = e.changedTouches;
+                that.date.end = Number(new Date());
+                if (
+                    (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
+                    (that.touch.start.length === 1) &&
+                    (that.touch.end.length === 1) &&
+                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.horizontalDistanceThreshold)&&
+                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > 225 &&
+                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) < 315)
+                ) {
+                    that.callback.call(that.dom);
+                }
+
+                document.removeEventListener("touchend", touchend);
+            };
+            //设置手指触发事件
+            var touchstart = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = [];
+                var len = e.targetTouches.length;
+                for (var i = 0; i < len; i++) {
+                    (function () {
+                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                        that.touch.start.push(obj);
+                    })();
+                }
+
+                document.addEventListener("touchend", touchend);
+            };
+
+            that.dom.addEventListener("touchstart", touchstart);
         };
 
         //计算滑动的角度
         that.getAngle = function (px1, py1, px2, py2) {
             //两点的x、y值
-            x = px2-px1;
-            y = py2-py1;
-            hypotenuse = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
+            x = px2 - px1;
+            y = py2 - py1;
+            hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             //斜边长度
-            cos = x/hypotenuse;
+            cos = x / hypotenuse;
             radian = Math.acos(cos);
             //求出弧度
-            angle = 180/(Math.PI/radian);
+            angle = 180 / (Math.PI / radian);
             //用弧度算出角度
-            if (y<0) {
+            if (y < 0) {
                 angle = -angle;
-            } else if ((y == 0) && (x<0)) {
+            } else if ((y == 0) && (x < 0)) {
                 angle = 180;
             }
-            return angle;
+            return angle+180;
         };
 
         //计算两点之间的距离
-        that.getRange = function (px1,py1,px2,py2) {
+        that.getRange = function (px1, py1, px2, py2) {
             return Math.sqrt(Math.pow(Math.abs(px1 - px2), 2) + Math.pow(Math.abs(py1 - py2), 2));
         };
     };
@@ -695,7 +830,6 @@ function MyNeedExtend() {
             that.touch = {};
 
             var arr = event.split(",");
-            console.log(arr);
             for (var i = 0; i < arr.length; i++) {
                 //监听事件
                 if (that.arr.indexOf(arr[i]) != -1) {
@@ -810,7 +944,7 @@ function MyNeedExtend() {
                 that.date.end = Number(new Date());
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
-                    (that.getRange(that.touch.start.clientX,that.touch.start.clientY,that.touch.end.clientX,that.touch.end.clientY) > that.settings.horizontalDistanceThreshold)
+                    (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold)
                 ) {
                     that.callback.call(that.dom);
                 }
@@ -837,7 +971,9 @@ function MyNeedExtend() {
                 that.date.end = Number(new Date());
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
-                    (that.getRange(that.touch.start.clientX,that.touch.start.clientY,that.touch.end.clientX,that.touch.end.clientY) > that.settings.horizontalDistanceThreshold)
+                    (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.verticalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) >= 135 ||
+                        that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) <= -135)
                 ) {
                     that.callback.call(that.dom);
                 }
@@ -858,39 +994,114 @@ function MyNeedExtend() {
         };
 
         that.swipeRight = function () {
-            console.log("swipeRight");
+            var mouseUp = function (event) {
+                var e = event || window.event;
+                that.touch.end = e;
+                that.date.end = Number(new Date());
+                if (
+                    (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
+                    (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.verticalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) >= -45 &&
+                    that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) <= 45)
+                ) {
+                    that.callback.call(that.dom);
+                }
+
+                document.removeEventListener("mouseup", mouseUp);
+            };
+            //设置手指触发事件
+            var mouseDown = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = my.jquery.extend(true, {}, e);
+
+                document.addEventListener("mouseup", mouseUp);
+            };
+
+            that.dom.addEventListener("mousedown", mouseDown);
         };
 
         that.swipeUp = function () {
-            console.log("swipeUp");
+            var mouseUp = function (event) {
+                var e = event || window.event;
+                that.touch.end = e;
+                that.date.end = Number(new Date());
+                if (
+                    (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
+                    (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > -135 &&
+                    that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) < -45)
+                ) {
+                    that.callback.call(that.dom);
+                }
+
+                document.removeEventListener("mouseup", mouseUp);
+            };
+            //设置手指触发事件
+            var mouseDown = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = my.jquery.extend(true, {}, e);
+
+                document.addEventListener("mouseup", mouseUp);
+            };
+
+            that.dom.addEventListener("mousedown", mouseDown);
         };
 
         that.swipeDown = function () {
-            console.log("swipeDown");
+            var mouseUp = function (event) {
+                var e = event || window.event;
+                that.touch.end = e;
+                that.date.end = Number(new Date());
+                if (
+                    (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
+                    (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > 45 &&
+                    that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) < 135)
+                ) {
+                    that.callback.call(that.dom);
+                }
+
+                document.removeEventListener("mouseup", mouseUp);
+            };
+            //设置手指触发事件
+            var mouseDown = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.date.start = Number(new Date());
+                that.touch.start = my.jquery.extend(true, {}, e);
+
+                document.addEventListener("mouseup", mouseUp);
+            };
+
+            that.dom.addEventListener("mousedown", mouseDown);
         };
 
         //计算滑动的角度
         that.getAngle = function (px1, py1, px2, py2) {
             //两点的x、y值
-            x = px2-px1;
-            y = py2-py1;
-            hypotenuse = Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2));
+            x = px2 - px1;
+            y = py2 - py1;
+            hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             //斜边长度
-            cos = x/hypotenuse;
+            cos = x / hypotenuse;
             radian = Math.acos(cos);
             //求出弧度
-            angle = 180/(Math.PI/radian);
+            angle = 180 / (Math.PI / radian);
             //用弧度算出角度
-            if (y<0) {
+            if (y < 0) {
                 angle = -angle;
-            } else if ((y == 0) && (x<0)) {
+            } else if ((y == 0) && (x < 0)) {
                 angle = 180;
             }
             return angle;
         };
 
         //计算两点之间的距离
-        that.getRange = function (px1,py1,px2,py2) {
+        that.getRange = function (px1, py1, px2, py2) {
             return Math.sqrt(Math.pow(Math.abs(px1 - px2), 2) + Math.pow(Math.abs(py1 - py2), 2));
         };
     };

@@ -28,8 +28,29 @@
 <script>
     var myExtend = new MyNeedExtend();
     var dom = myExtend.touch(document.getElementById("div"));
+    dom.on("tap",function () {
+        console.log("tap");
+    });
+    dom.on("doubleTap",function () {
+        console.log("doubleTap");
+    });
     dom.on("swipe",function () {
-        alert("1");
+        console.log("swipe");
+    });
+    dom.on("longTap",function () {
+        console.log("longTap");
+    });
+    dom.on("swipeLeft",function () {
+        console.log("swipeLeft");
+    });
+    dom.on("swipeRight",function () {
+        console.log("swipeRight");
+    });
+    dom.on("swipeUp",function () {
+        console.log("swipeUp");
+    });
+    dom.on("swipeDown",function () {
+        console.log("swipeDown");
     });
 </script>
 </html>
