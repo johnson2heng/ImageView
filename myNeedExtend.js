@@ -425,13 +425,13 @@ function MyNeedExtend() {
         that.tap = function () {
             var touchend = function (event) {
                 var e = event || window.event;
-                that.touch.end = e.changedTouches;
-                that.date.end = Number(new Date());
+                that.tap.end = e.changedTouches;
+                that.tap.endTime = Number(new Date());
                 if (
-                    (that.date.end - that.date.start <= that.settings.tapDurationThreshold) &&
-                    (that.touch.start.length === 1) &&
-                    (that.touch.end.length === 1) &&
-                    (Math.sqrt(Math.pow(Math.abs(that.touch.start[0].clientX - that.touch.end[0].clientX), 2) + Math.pow(Math.abs(that.touch.start[0].clientY - that.touch.end[0].clientY), 2)) < that.settings.scrollSupressionThreshold)
+                    (that.tap.endTime - that.tap.startTime <= that.settings.tapDurationThreshold) &&
+                    (that.tap.start.length === 1) &&
+                    (that.tap.end.length === 1) &&
+                    (that.getRange(that.tap.start[0].clientX,that.tap.start[0].clientY,that.tap.end[0].clientX,that.tap.end[0].clientY) < that.settings.scrollSupressionThreshold)
                 ) {
                     that.callback.call(that.dom);
                 }
@@ -442,13 +442,63 @@ function MyNeedExtend() {
             var touchstart = function (event) {
                 var e = event || window.event;
                 e.preventDefault();
-                that.date.start = Number(new Date());
-                that.touch.start = [];
+                that.tap.startTime = Number(new Date());
+                that.tap.start = [];
                 var len = e.targetTouches.length;
                 for (var i = 0; i < len; i++) {
                     (function () {
                         var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.touch.start.push(obj);
+                        that.tap.start.push(obj);
+                    })();
+                }
+
+                document.addEventListener("touchend", touchend);
+            };
+
+            that.dom.addEventListener("touchstart", touchstart);
+        };
+
+        that.singleTap = function () {
+            that.singleTap.timeOut = null;//预防与双击冲突的延迟器
+            that.singleTap.type = false;//是否双击的标记
+            var touchend = function (event) {
+                var e = event || window.event;
+                that.singleTap.end = e.changedTouches;
+                that.singleTap.endTime = Number(new Date());
+                if (
+                    (that.singleTap.endTime - that.singleTap.startTime <= that.settings.tapDurationThreshold) &&
+                    (that.singleTap.start.length === 1) &&
+                    (that.singleTap.end.length === 1) &&
+                    (that.getRange(that.singleTap.start[0].clientX,that.singleTap.start[0].clientY,that.singleTap.end[0].clientX,that.singleTap.end[0].clientY) < that.settings.scrollSupressionThreshold)
+                ) {
+                    if(that.singleTap.type) return;
+                    that.singleTap.timeOut = setTimeout(function () {
+                        that.callback.call(that.dom);
+                    },that.settings.doubleTapInterval);
+                }
+
+                document.removeEventListener("touchend", touchend);
+            };
+
+            //设置手指触发事件
+            var touchstart = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.singleTap.startTime = Number(new Date());
+                that.singleTap.start = [];
+
+                //双击清除singleTap事件
+                if(that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval){
+                    clearTimeout(that.singleTap.timeOut);
+                    that.singleTap.type = true;
+                }else{
+                    that.singleTap.type = false;
+                }
+                var len = e.targetTouches.length;
+                for (var i = 0; i < len; i++) {
+                    (function () {
+                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                        that.singleTap.start.push(obj);
                     })();
                 }
 
@@ -462,18 +512,18 @@ function MyNeedExtend() {
             that.doubleTap.prevTime = 0;//定义一个记录上一次点击后鼠标抬起的时的时间变量
             var touchend = function (event) {
                 var e = event || window.event;
-                that.touch.end = e.changedTouches;
-                that.date.end = Number(new Date());
+                that.doubleTap.end = e.changedTouches;
+                that.doubleTap.endTime = Number(new Date());
                 if (
-                    (that.date.end - that.date.start <= that.settings.tapDurationThreshold) &&
-                    (that.touch.start.length === 1) &&
-                    (that.touch.end.length === 1) &&
-                    (Math.sqrt(Math.pow(Math.abs(that.touch.start[0].clientX - that.touch.end[0].clientX), 2) + Math.pow(Math.abs(that.touch.start[0].clientY - that.touch.end[0].clientY), 2)) < that.settings.scrollSupressionThreshold)
+                    (that.doubleTap.endTime - that.doubleTap.startTime <= that.settings.tapDurationThreshold) &&
+                    (that.doubleTap.start.length === 1) &&
+                    (that.doubleTap.end.length === 1) &&
+                    (that.getRange(that.doubleTap.start[0].clientX,that.doubleTap.start[0].clientY,that.doubleTap.end[0].clientX,that.doubleTap.end[0].clientY) < that.settings.scrollSupressionThreshold)
                 ) {
-                    if (that.doubleTap.prevTime != 0 && that.date.end - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
+                    if (that.doubleTap.prevTime != 0 && that.doubleTap.startTime - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
                         that.callback.call(that.dom);
                     } else {
-                        that.doubleTap.prevTime = that.date.end;
+                        that.doubleTap.prevTime = that.doubleTap.endTime;
                     }
                 } else {
                     that.doubleTap.prevTime = 0;
@@ -484,13 +534,13 @@ function MyNeedExtend() {
             var touchstart = function (event) {
                 var e = event || window.event;
                 e.preventDefault();
-                that.date.start = Number(new Date());
-                that.touch.start = [];
+                that.doubleTap.startTime = Number(new Date());
+                that.doubleTap.start = [];
                 var len = e.targetTouches.length;
                 for (var i = 0; i < len; i++) {
                     (function () {
                         var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.touch.start.push(obj);
+                        that.doubleTap.start.push(obj);
                     })();
                 }
 
@@ -858,6 +908,46 @@ function MyNeedExtend() {
                 e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
+
+                document.addEventListener("mouseup", mouseUp);
+            };
+
+            that.dom.addEventListener("mousedown", mouseDown);
+        };
+
+        that.singleTap = function () {
+            that.singleTap.timeOut = null;//预防与双击冲突的延迟器
+            that.singleTap.type = false;//是否双击的标记
+            var mouseUp = function (event) {
+                var e = event || window.event;
+                that.singleTap.end = e;
+                that.singleTap.endTime = Number(new Date());
+                if (
+                    (that.singleTap.endTime - that.singleTap.startTime <= that.settings.tapDurationThreshold) &&
+                    (Math.sqrt(Math.pow(Math.abs(that.singleTap.start.clientX - that.singleTap.end.clientX), 2) + Math.pow(Math.abs(that.singleTap.start.clientY - that.singleTap.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
+                ) {
+                    if(that.singleTap.type) return;
+                    that.singleTap.timeOut = setTimeout(function () {
+                        that.callback.call(that.dom);
+                    },that.settings.doubleTapInterval);
+                }
+
+                document.removeEventListener("mouseup", mouseUp);
+            };
+            //设置手指触发事件
+            var mouseDown = function (event) {
+                var e = event || window.event;
+                e.preventDefault();
+                that.singleTap.startTime = Number(new Date());
+                that.singleTap.start = my.jquery.extend(true, {}, e);
+
+                //双击清除singleTap事件
+                if(that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval){
+                    clearTimeout(that.singleTap.timeOut);
+                    that.singleTap.type = true;
+                }else{
+                    that.singleTap.type = false;
+                }
 
                 document.addEventListener("mouseup", mouseUp);
             };
