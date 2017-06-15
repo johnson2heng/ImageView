@@ -434,7 +434,7 @@ function MyNeedExtend() {
                     (that.tap.end.length === 1) &&
                     (that.getRange(that.tap.start[0].clientX,that.tap.start[0].clientY,that.tap.end[0].clientX,that.tap.end[0].clientY) < that.settings.scrollSupressionThreshold)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
