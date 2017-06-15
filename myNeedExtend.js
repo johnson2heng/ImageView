@@ -423,6 +423,7 @@ function MyNeedExtend() {
         };
 
         that.tap = function () {
+            var currentTarget;
             var touchend = function (event) {
                 var e = event || window.event;
                 that.tap.end = e.changedTouches;
@@ -452,6 +453,8 @@ function MyNeedExtend() {
                     })();
                 }
 
+                currentTarget = e;
+
                 document.addEventListener("touchend", touchend);
             };
 
@@ -459,6 +462,7 @@ function MyNeedExtend() {
         };
 
         that.singleTap = function () {
+            var currentTarget;
             that.singleTap.timeOut = null;//预防与双击冲突的延迟器
             that.singleTap.type = false;//是否双击的标记
             var touchend = function (event) {
@@ -473,7 +477,7 @@ function MyNeedExtend() {
                 ) {
                     if(that.singleTap.type) return;
                     that.singleTap.timeOut = setTimeout(function () {
-                        that.callback.call(that.dom);
+                        that.callback.call(that.dom,currentTarget);
                     },that.settings.doubleTapInterval);
                 }
 
@@ -486,6 +490,8 @@ function MyNeedExtend() {
                 e.preventDefault();
                 that.singleTap.startTime = Number(new Date());
                 that.singleTap.start = [];
+
+                currentTarget = e;
 
                 //双击清除singleTap事件
                 if(that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval){
@@ -509,6 +515,7 @@ function MyNeedExtend() {
         };
 
         that.doubleTap = function () {
+            var currentTarget;
             that.doubleTap.prevTime = 0;//定义一个记录上一次点击后鼠标抬起的时的时间变量
             var touchend = function (event) {
                 var e = event || window.event;
@@ -521,7 +528,7 @@ function MyNeedExtend() {
                     (that.getRange(that.doubleTap.start[0].clientX,that.doubleTap.start[0].clientY,that.doubleTap.end[0].clientX,that.doubleTap.end[0].clientY) < that.settings.scrollSupressionThreshold)
                 ) {
                     if (that.doubleTap.prevTime != 0 && that.doubleTap.startTime - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
-                        that.callback.call(that.dom);
+                        that.callback.call(that.dom,currentTarget);
                     } else {
                         that.doubleTap.prevTime = that.doubleTap.endTime;
                     }
@@ -544,6 +551,8 @@ function MyNeedExtend() {
                     })();
                 }
 
+                currentTarget =e;
+
                 document.addEventListener("touchend", touchend);
             };
 
@@ -551,6 +560,7 @@ function MyNeedExtend() {
         };
 
         that.longTap = function () {
+            var currentTarget;
             var mouseDown = function (event) {
                 var e = event || window.event;
                 e.preventDefault();
@@ -558,12 +568,14 @@ function MyNeedExtend() {
                 that.longTap.start = my.jquery.extend(true, {}, e.targetTouches[0]);
                 that.longTap.move = null;
 
+                currentTarget = e;
+
                 //设置定时器，确定长按触发的事件
                 that.longTap.timeOut = setTimeout(function () {
                     if (!that.longTap.move ||
                         Math.sqrt(Math.pow(Math.abs(that.longTap.start.clientX - that.longTap.move.clientX), 2) + Math.pow(Math.abs(that.longTap.start.clientY - that.longTap.move.clientY), 2)) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
-                        that.callback.call(that.dom);
+                        that.callback.call(that.dom,currentTarget);
                     } else {
                         mouseUp();
                     }
@@ -588,6 +600,7 @@ function MyNeedExtend() {
         };
 
         that.swipe = function () {
+            var currentTarget;
             var touchend = function (event) {
                 var e = event || window.event;
                 that.touch.end = e.changedTouches;
@@ -598,7 +611,7 @@ function MyNeedExtend() {
                     (that.touch.end.length === 1) &&
                     (Math.sqrt(Math.pow(Math.abs(that.touch.start[0].clientX - that.touch.end[0].clientX), 2) + Math.pow(Math.abs(that.touch.start[0].clientY - that.touch.end[0].clientY), 2)) > that.settings.horizontalDistanceThreshold)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -617,6 +630,8 @@ function MyNeedExtend() {
                     })();
                 }
 
+                currentTarget = e;
+
                 document.addEventListener("touchend", touchend);
             };
 
@@ -624,6 +639,7 @@ function MyNeedExtend() {
         };
 
         that.swipeLeft = function () {
+            var currentTarget;
             var touchend = function (event) {
                 var e = event || window.event;
                 that.touch.end = e.changedTouches;
@@ -636,7 +652,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) >= 315 ||
                     that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) <= 45)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -655,6 +671,8 @@ function MyNeedExtend() {
                     })();
                 }
 
+                currentTarget = e;
+
                 document.addEventListener("touchend", touchend);
             };
 
@@ -662,6 +680,7 @@ function MyNeedExtend() {
         };
 
         that.swipeRight = function () {
+            var currentTarget;
             var touchend = function (event) {
                 var e = event || window.event;
                 that.touch.end = e.changedTouches;
@@ -674,7 +693,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) >= 135 &&
                     that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) <= 225)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -693,6 +712,8 @@ function MyNeedExtend() {
                     })();
                 }
 
+                currentTarget = e;
+
                 document.addEventListener("touchend", touchend);
             };
 
@@ -700,6 +721,7 @@ function MyNeedExtend() {
         };
 
         that.swipeUp = function () {
+            var currentTarget;
             var touchend = function (event) {
                 var e = event || window.event;
                 that.touch.end = e.changedTouches;
@@ -712,7 +734,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > 45 &&
                     that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) < 135)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -731,6 +753,8 @@ function MyNeedExtend() {
                     })();
                 }
 
+                currentTarget = e;
+
                 document.addEventListener("touchend", touchend);
             };
 
@@ -738,6 +762,7 @@ function MyNeedExtend() {
         };
 
         that.swipeDown = function () {
+            var currentTarget;
             var touchend = function (event) {
                 var e = event || window.event;
                 that.touch.end = e.changedTouches;
@@ -750,7 +775,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > 225 &&
                     that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) < 315)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -768,6 +793,8 @@ function MyNeedExtend() {
                         that.touch.start.push(obj);
                     })();
                 }
+
+                currentTarget = e;
 
                 document.addEventListener("touchend", touchend);
             };
@@ -889,6 +916,9 @@ function MyNeedExtend() {
         };
 
         that.tap = function () {
+
+            var currentTarget;
+
             var mouseUp = function (event) {
                 var e = event || window.event;
                 that.touch.end = e;
@@ -897,7 +927,7 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.tapDurationThreshold) &&
                     (Math.sqrt(Math.pow(Math.abs(that.touch.start.clientX - that.touch.end.clientX), 2) + Math.pow(Math.abs(that.touch.start.clientY - that.touch.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -909,6 +939,8 @@ function MyNeedExtend() {
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
+                currentTarget = event;
+
                 document.addEventListener("mouseup", mouseUp);
             };
 
@@ -916,6 +948,7 @@ function MyNeedExtend() {
         };
 
         that.singleTap = function () {
+            var currentTarget;
             that.singleTap.timeOut = null;//预防与双击冲突的延迟器
             that.singleTap.type = false;//是否双击的标记
             var mouseUp = function (event) {
@@ -928,7 +961,7 @@ function MyNeedExtend() {
                 ) {
                     if(that.singleTap.type) return;
                     that.singleTap.timeOut = setTimeout(function () {
-                        that.callback.call(that.dom);
+                        that.callback.call(that.dom,currentTarget);
                     },that.settings.doubleTapInterval);
                 }
 
@@ -940,6 +973,8 @@ function MyNeedExtend() {
                 e.preventDefault();
                 that.singleTap.startTime = Number(new Date());
                 that.singleTap.start = my.jquery.extend(true, {}, e);
+
+                currentTarget = e;
 
                 //双击清除singleTap事件
                 if(that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval){
@@ -956,6 +991,7 @@ function MyNeedExtend() {
         };
 
         that.doubleTap = function () {
+            var currentTarget;
             that.doubleTap.prevTime = 0;//定义一个记录上一次点击后鼠标抬起的时的时间变量
             var mouseUp = function (event) {
                 var e = event || window.event;
@@ -966,7 +1002,7 @@ function MyNeedExtend() {
                     (Math.sqrt(Math.pow(Math.abs(that.doubleTap.start.clientX - that.doubleTap.end.clientX), 2) + Math.pow(Math.abs(that.doubleTap.start.clientY - that.doubleTap.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
                 ) {
                     if (that.doubleTap.prevTime != 0 && that.doubleTap.endTime - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
-                        that.callback.call(that.dom);
+                        that.callback.call(that.dom,currentTarget);
                     } else {
                         that.doubleTap.prevTime = that.doubleTap.endTime;
                     }
@@ -983,6 +1019,8 @@ function MyNeedExtend() {
                 that.doubleTap.startTime = Number(new Date());
                 that.doubleTap.start = my.jquery.extend(true, {}, e);
 
+                currentTarget = e;
+
                 document.addEventListener("mouseup", mouseUp);
             };
 
@@ -990,6 +1028,7 @@ function MyNeedExtend() {
         };
 
         that.longTap = function () {
+            var currentTarget;
             var mouseDown = function (event) {
                 var e = event || window.event;
                 e.preventDefault();
@@ -997,12 +1036,14 @@ function MyNeedExtend() {
                 that.longTap.start = my.jquery.extend(true, {}, e);
                 that.longTap.move = null;
 
+                currentTarget = e;
+
                 //设置定时器，确定长按触发的事件
                 that.longTap.timeOut = setTimeout(function () {
                     if (!that.longTap.move ||
                         Math.sqrt(Math.pow(Math.abs(that.longTap.start.clientX - that.longTap.move.clientX), 2) + Math.pow(Math.abs(that.longTap.start.clientY - that.longTap.move.clientY), 2)) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
-                        that.callback.call(that.dom);
+                        that.callback.call(that.dom,currentTarget);
                     } else {
                         mouseUp();
                     }
@@ -1028,6 +1069,7 @@ function MyNeedExtend() {
         };
 
         that.swipe = function () {
+            var currentTarget;
             var mouseUp = function (event) {
                 var e = event || window.event;
                 that.touch.end = e;
@@ -1036,7 +1078,7 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1048,6 +1090,8 @@ function MyNeedExtend() {
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
+                currentTarget = e;
+
                 document.addEventListener("mouseup", mouseUp);
             };
 
@@ -1055,6 +1099,7 @@ function MyNeedExtend() {
         };
 
         that.swipeLeft = function () {
+            var currentTarget;
             var mouseUp = function (event) {
                 var e = event || window.event;
                 that.touch.end = e;
@@ -1065,7 +1110,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) >= 135 ||
                         that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) <= -135)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1077,6 +1122,8 @@ function MyNeedExtend() {
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
+                currentTarget = e;
+
                 document.addEventListener("mouseup", mouseUp);
             };
 
@@ -1084,6 +1131,7 @@ function MyNeedExtend() {
         };
 
         that.swipeRight = function () {
+            var currentTarget;
             var mouseUp = function (event) {
                 var e = event || window.event;
                 that.touch.end = e;
@@ -1094,7 +1142,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) >= -45 &&
                     that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) <= 45)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1106,6 +1154,8 @@ function MyNeedExtend() {
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
+                currentTarget = e;
+
                 document.addEventListener("mouseup", mouseUp);
             };
 
@@ -1113,6 +1163,7 @@ function MyNeedExtend() {
         };
 
         that.swipeUp = function () {
+            var currentTarget;
             var mouseUp = function (event) {
                 var e = event || window.event;
                 that.touch.end = e;
@@ -1123,7 +1174,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > -135 &&
                     that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) < -45)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1135,6 +1186,8 @@ function MyNeedExtend() {
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
+                currentTarget = e;
+
                 document.addEventListener("mouseup", mouseUp);
             };
 
@@ -1142,6 +1195,7 @@ function MyNeedExtend() {
         };
 
         that.swipeDown = function () {
+            var currentTarget;
             var mouseUp = function (event) {
                 var e = event || window.event;
                 that.touch.end = e;
@@ -1152,7 +1206,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > 45 &&
                     that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) < 135)
                 ) {
-                    that.callback.call(that.dom);
+                    that.callback.call(that.dom,currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1163,6 +1217,8 @@ function MyNeedExtend() {
                 e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
+
+                currentTarget = e;
 
                 document.addEventListener("mouseup", mouseUp);
             };
@@ -1758,26 +1814,51 @@ function MyNeedExtend() {
             var arr = that.arr;
             //判断是向左还是向右移动图片
             if (val === "left") {
-                picIndex--;
-                if (picIndex < 0) {
+                if(picIndex <= 0){
                     picIndex = 0;
-                    //return;
+                    changeList(true);
+                }else{
+                    picIndex--;
+                    changeList(false);
                 }
             } else if (val === "right") {
                 picIndex++;
                 if (picIndex >= arr.length) {
                     picIndex = arr.length - 1;
-                    //return;
+                    changeList(true);
+                }else{
+                    changeList(false);
                 }
             }
 
-            that.settings.picIndex = picIndex;
-            //console.log(picIndex,picWrap.offsetWidth);
-            //移动列表
-            that.ul.style.left = -picIndex * that.picWrap.offsetWidth + "px";
-            for (var i = 0; i < that.ul.childNodes.length; i++) {
-                that.ul.childNodes[i].childNodes[0].style.transform = "translate(0px, 0px) scale(1, 1)";
+            //判断
+            function changeList(bool){
+                //移动列表
+                that.settings.picIndex = picIndex;
+
+                //判断是否在结尾处，如果在结尾，实现弹一下的效果 是（true） 不是 （false）
+                //that.changePic.canBcak  延迟器，延迟一下触发时间
+                if(bool && that.media === "pc"){
+                    clearTimeout(that.changePic.canBack);
+                    if(picIndex == 0){
+                        that.ul.style.left = "300px";
+                    }else{
+                        that.ul.style.left = -300-picIndex * that.picWrap.offsetWidth + "px";
+                    }
+
+                    that.changePic.canBack = setTimeout(function () {
+                        if(!that.changePic.canBack) return;
+                        that.ul.style.left = -picIndex * that.picWrap.offsetWidth + "px";
+                    },300)
+                }else {
+                    clearTimeout(that.changePic.canBack);
+                    that.ul.style.left = -picIndex * that.picWrap.offsetWidth + "px";
+                    for (var i = 0; i < that.ul.childNodes.length; i++) {
+                        that.ul.childNodes[i].childNodes[0].style.transform = "translate(0px, 0px) scale(1, 1)";
+                    }
+                }
             }
+
         };
 
         //图片缩放时调用的方法，更新相关内容
