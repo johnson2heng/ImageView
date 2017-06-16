@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+alpha:<span id="alpha"></span><br/>
+beta:<span id="beta"></span><br/>
+gamma:<span id="gamma"></span><br/>
+webkitCompassHeading:<span id="webkitCompassHeading"></span><br/>
+</body>
+<script>
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function (event) {
+            var a = document.getElementById('alpha'),
+                b = document.getElementById('beta'),
+                g = document.getElementById('gamma'),
+                w = document.getElementById("webkitCompassHeading"),
+                alpha = event.alpha,
+                beta = event.beta,
+                gamma = event.gamma,
+                compass = event.webkitCompassHeading;
+
+            a.innerHTML = Math.round(alpha);
+            b.innerHTML = Math.round(beta);
+            g.innerHTML = Math.round(gamma);
+            w.innerHTML = compass;
+
+            console.log(event);
+
+        }, false);
+    } else {
+        document.querySelector('body').innerHTML = '你的浏览器不支持陀螺仪';
+    }
+</script>
+</html>
