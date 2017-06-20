@@ -56,5 +56,10 @@
     dom.on("swipeDown",function () {
         console.log("swipeDown");
     });
+    dom.on("wheel",function () {
+        console.log("向下滚动");
+    },function () {
+        console.log("向上滚动");
+    })
 </script>
 </html>

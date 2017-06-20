@@ -112,7 +112,7 @@ function MyNeedExtend() {
         // Since version 1.3, DOM methods and functions like alert
         // aren't supported. They return false on IE (#2968).
         isFunction: function (obj) {
-            return jQuery.type(obj) === "function";
+            return typeof(obj) === "function";
         },
 
         isArray: Array.isArray,
@@ -432,9 +432,9 @@ function MyNeedExtend() {
                     (that.tap.endTime - that.tap.startTime <= that.settings.tapDurationThreshold) &&
                     (that.tap.start.length === 1) &&
                     (that.tap.end.length === 1) &&
-                    (that.getRange(that.tap.start[0].clientX,that.tap.start[0].clientY,that.tap.end[0].clientX,that.tap.end[0].clientY) < that.settings.scrollSupressionThreshold)
+                    (that.getRange(that.tap.start[0].clientX, that.tap.start[0].clientY, that.tap.end[0].clientX, that.tap.end[0].clientY) < that.settings.scrollSupressionThreshold)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -473,12 +473,12 @@ function MyNeedExtend() {
                     (that.singleTap.endTime - that.singleTap.startTime <= that.settings.tapDurationThreshold) &&
                     (that.singleTap.start.length === 1) &&
                     (that.singleTap.end.length === 1) &&
-                    (that.getRange(that.singleTap.start[0].clientX,that.singleTap.start[0].clientY,that.singleTap.end[0].clientX,that.singleTap.end[0].clientY) < that.settings.scrollSupressionThreshold)
+                    (that.getRange(that.singleTap.start[0].clientX, that.singleTap.start[0].clientY, that.singleTap.end[0].clientX, that.singleTap.end[0].clientY) < that.settings.scrollSupressionThreshold)
                 ) {
-                    if(that.singleTap.type) return;
+                    if (that.singleTap.type) return;
                     that.singleTap.timeOut = setTimeout(function () {
-                        that.callback.call(that.dom,currentTarget);
-                    },that.settings.doubleTapInterval);
+                        that.callback.call(that.dom, currentTarget);
+                    }, that.settings.doubleTapInterval);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -494,10 +494,10 @@ function MyNeedExtend() {
                 currentTarget = e;
 
                 //双击清除singleTap事件
-                if(that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval){
+                if (that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval) {
                     clearTimeout(that.singleTap.timeOut);
                     that.singleTap.type = true;
-                }else{
+                } else {
                     that.singleTap.type = false;
                 }
                 var len = e.targetTouches.length;
@@ -525,10 +525,10 @@ function MyNeedExtend() {
                     (that.doubleTap.endTime - that.doubleTap.startTime <= that.settings.tapDurationThreshold) &&
                     (that.doubleTap.start.length === 1) &&
                     (that.doubleTap.end.length === 1) &&
-                    (that.getRange(that.doubleTap.start[0].clientX,that.doubleTap.start[0].clientY,that.doubleTap.end[0].clientX,that.doubleTap.end[0].clientY) < that.settings.scrollSupressionThreshold)
+                    (that.getRange(that.doubleTap.start[0].clientX, that.doubleTap.start[0].clientY, that.doubleTap.end[0].clientX, that.doubleTap.end[0].clientY) < that.settings.scrollSupressionThreshold)
                 ) {
                     if (that.doubleTap.prevTime != 0 && that.doubleTap.startTime - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
-                        that.callback.call(that.dom,currentTarget);
+                        that.callback.call(that.dom, currentTarget);
                     } else {
                         that.doubleTap.prevTime = that.doubleTap.endTime;
                     }
@@ -551,7 +551,7 @@ function MyNeedExtend() {
                     })();
                 }
 
-                currentTarget =e;
+                currentTarget = e;
 
                 document.addEventListener("touchend", touchend);
             };
@@ -575,7 +575,7 @@ function MyNeedExtend() {
                     if (!that.longTap.move ||
                         Math.sqrt(Math.pow(Math.abs(that.longTap.start.clientX - that.longTap.move.clientX), 2) + Math.pow(Math.abs(that.longTap.start.clientY - that.longTap.move.clientY), 2)) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
-                        that.callback.call(that.dom,currentTarget);
+                        that.callback.call(that.dom, currentTarget);
                     } else {
                         mouseUp();
                     }
@@ -611,7 +611,7 @@ function MyNeedExtend() {
                     (that.touch.end.length === 1) &&
                     (Math.sqrt(Math.pow(Math.abs(that.touch.start[0].clientX - that.touch.end[0].clientX), 2) + Math.pow(Math.abs(that.touch.start[0].clientY - that.touch.end[0].clientY), 2)) > that.settings.horizontalDistanceThreshold)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -648,11 +648,11 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.touch.start.length === 1) &&
                     (that.touch.end.length === 1) &&
-                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.verticalDistanceThreshold)&&
-                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) >= 315 ||
-                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) <= 45)
+                    (that.getRange(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) > that.settings.verticalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) >= 315 ||
+                    that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) <= 45)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -689,11 +689,11 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.touch.start.length === 1) &&
                     (that.touch.end.length === 1) &&
-                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.verticalDistanceThreshold)&&
-                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) >= 135 &&
-                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) <= 225)
+                    (that.getRange(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) > that.settings.verticalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) >= 135 &&
+                    that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) <= 225)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -730,11 +730,11 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.touch.start.length === 1) &&
                     (that.touch.end.length === 1) &&
-                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.horizontalDistanceThreshold)&&
-                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > 45 &&
-                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) < 135)
+                    (that.getRange(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) > that.settings.horizontalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) > 45 &&
+                    that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) < 135)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -771,11 +771,11 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.touch.start.length === 1) &&
                     (that.touch.end.length === 1) &&
-                    (that.getRange(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > that.settings.horizontalDistanceThreshold)&&
-                    (that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) > 225 &&
-                    that.getAngle(that.touch.start[0].clientX,that.touch.start[0].clientY,that.touch.end[0].clientX,that.touch.end[0].clientY) < 315)
+                    (that.getRange(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) > that.settings.horizontalDistanceThreshold) &&
+                    (that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) > 225 &&
+                    that.getAngle(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) < 315)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
@@ -819,7 +819,7 @@ function MyNeedExtend() {
             } else if ((y == 0) && (x < 0)) {
                 angle = 180;
             }
-            return angle+180;
+            return angle + 180;
         };
 
         //计算两点之间的距离
@@ -895,18 +895,20 @@ function MyNeedExtend() {
             doubleTapInterval: 250//双击事件触发中间的间隔必须小于这个时间
         };
 
-        that.init = function (dom, callback, event) {
+        that.init = function (dom, callback, event, callback2) {
             that.dom = dom;
             that.callback = callback;
+            //callback2兼容滚动事件上下两个方法的兼容
+            that.callback2 = callback2;
 
             //时间存储
             that.date = {};
             //所有的可以触发的事件数组
-            that.arr = ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'];
+            that.arr = ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap', "wheel"];
             //存储手指接触移动端的接触点的相关信息
             that.touch = {};
 
-            var arr = event.split(",");
+            var arr = event.split(" ");
             for (var i = 0; i < arr.length; i++) {
                 //监听事件
                 if (that.arr.indexOf(arr[i]) != -1) {
@@ -927,7 +929,7 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.tapDurationThreshold) &&
                     (Math.sqrt(Math.pow(Math.abs(that.touch.start.clientX - that.touch.end.clientX), 2) + Math.pow(Math.abs(that.touch.start.clientY - that.touch.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -959,10 +961,10 @@ function MyNeedExtend() {
                     (that.singleTap.endTime - that.singleTap.startTime <= that.settings.tapDurationThreshold) &&
                     (Math.sqrt(Math.pow(Math.abs(that.singleTap.start.clientX - that.singleTap.end.clientX), 2) + Math.pow(Math.abs(that.singleTap.start.clientY - that.singleTap.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
                 ) {
-                    if(that.singleTap.type) return;
+                    if (that.singleTap.type) return;
                     that.singleTap.timeOut = setTimeout(function () {
-                        that.callback.call(that.dom,currentTarget);
-                    },that.settings.doubleTapInterval);
+                        that.callback.call(that.dom, currentTarget);
+                    }, that.settings.doubleTapInterval);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -977,10 +979,10 @@ function MyNeedExtend() {
                 currentTarget = e;
 
                 //双击清除singleTap事件
-                if(that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval){
+                if (that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval) {
                     clearTimeout(that.singleTap.timeOut);
                     that.singleTap.type = true;
-                }else{
+                } else {
                     that.singleTap.type = false;
                 }
 
@@ -1002,7 +1004,7 @@ function MyNeedExtend() {
                     (Math.sqrt(Math.pow(Math.abs(that.doubleTap.start.clientX - that.doubleTap.end.clientX), 2) + Math.pow(Math.abs(that.doubleTap.start.clientY - that.doubleTap.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
                 ) {
                     if (that.doubleTap.prevTime != 0 && that.doubleTap.endTime - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
-                        that.callback.call(that.dom,currentTarget);
+                        that.callback.call(that.dom, currentTarget);
                     } else {
                         that.doubleTap.prevTime = that.doubleTap.endTime;
                     }
@@ -1043,7 +1045,7 @@ function MyNeedExtend() {
                     if (!that.longTap.move ||
                         Math.sqrt(Math.pow(Math.abs(that.longTap.start.clientX - that.longTap.move.clientX), 2) + Math.pow(Math.abs(that.longTap.start.clientY - that.longTap.move.clientY), 2)) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
-                        that.callback.call(that.dom,currentTarget);
+                        that.callback.call(that.dom, currentTarget);
                     } else {
                         mouseUp();
                     }
@@ -1078,7 +1080,7 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1108,9 +1110,9 @@ function MyNeedExtend() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.verticalDistanceThreshold) &&
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) >= 135 ||
-                        that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) <= -135)
+                    that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) <= -135)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1142,7 +1144,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) >= -45 &&
                     that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) <= 45)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1174,7 +1176,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > -135 &&
                     that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) < -45)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1206,7 +1208,7 @@ function MyNeedExtend() {
                     (that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > 45 &&
                     that.getAngle(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) < 135)
                 ) {
-                    that.callback.call(that.dom,currentTarget);
+                    that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
@@ -1224,6 +1226,46 @@ function MyNeedExtend() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+        };
+
+        that.wheel = function () {
+            var dom = that.dom;
+            var fun1 = that.callback;
+            var fun2 = that.callback2;
+            function scroll(event) {
+                var e = event || window.event;
+                if (e.wheelDelta) {
+                    //除了firfox浏览器，别的浏览器的处理
+                    wheel(-e.wheelDelta / 120, e);
+                } else if (e.detail) {
+                    //firefox浏览器的测试
+                    if (e.detail === -3) {
+                        wheel(-1, e);
+                    } else if (e.detail === 3) {
+                        wheel(1, e);
+                    } else {
+                        console.log("鼠标滚轮事件改了？", e.wheelDelta);
+                    }
+                }
+
+                function wheel(index, event) {
+                    if(index >= 0){
+                        //向下滚动
+                        if(my.jquery.isFunction(fun1)){
+                            fun1.call(dom,event);
+                        }
+                    }else if(index < 0){
+                        //向上滚动
+                        if(my.jquery.isFunction(fun2)){
+                            fun2.call(dom,event);
+                        }
+                    }
+                }
+            }
+
+            //添加监听事件
+            dom.addEventListener("mousewheel",scroll,false);
+            dom.addEventListener("DOMMouseScroll",scroll,false);
         };
 
         //计算滑动的角度
@@ -1814,10 +1856,10 @@ function MyNeedExtend() {
             var arr = that.arr;
             //判断是向左还是向右移动图片
             if (val === "left") {
-                if(picIndex <= 0){
+                if (picIndex <= 0) {
                     picIndex = 0;
                     changeList(true);
-                }else{
+                } else {
                     picIndex--;
                     changeList(false);
                 }
@@ -1826,31 +1868,31 @@ function MyNeedExtend() {
                 if (picIndex >= arr.length) {
                     picIndex = arr.length - 1;
                     changeList(true);
-                }else{
+                } else {
                     changeList(false);
                 }
             }
 
             //判断
-            function changeList(bool){
+            function changeList(bool) {
                 //移动列表
                 that.settings.picIndex = picIndex;
 
                 //判断是否在结尾处，如果在结尾，实现弹一下的效果 是（true） 不是 （false）
                 //that.changePic.canBcak  延迟器，延迟一下触发时间
-                if(bool && that.media === "pc"){
+                if (bool && that.media === "pc") {
                     clearTimeout(that.changePic.canBack);
-                    if(picIndex == 0){
+                    if (picIndex == 0) {
                         that.ul.style.left = "300px";
-                    }else{
-                        that.ul.style.left = -300-picIndex * that.picWrap.offsetWidth + "px";
+                    } else {
+                        that.ul.style.left = -300 - picIndex * that.picWrap.offsetWidth + "px";
                     }
 
                     that.changePic.canBack = setTimeout(function () {
-                        if(!that.changePic.canBack) return;
+                        if (!that.changePic.canBack) return;
                         that.ul.style.left = -picIndex * that.picWrap.offsetWidth + "px";
-                    },300)
-                }else {
+                    }, 300)
+                } else {
                     clearTimeout(that.changePic.canBack);
                     that.ul.style.left = -picIndex * that.picWrap.offsetWidth + "px";
                     for (var i = 0; i < that.ul.childNodes.length; i++) {
@@ -2403,10 +2445,11 @@ function MyNeedExtend() {
 
             });
         },
-        on: function (event, fun) {
+        on: function (event, fun,fun2) {
+            //fun2 兼容鼠标滚动事件第二个事件
             return this.each(this, function (index, dom) {
                 if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init(dom, fun, event);
+                    new my.AddComputerFun().init(dom, fun, event ,fun2);
                 } else {
                     new my.AddTouchFun().init(dom, fun, event);
                 }
@@ -2420,6 +2463,8 @@ function MyNeedExtend() {
         if (my.isDom(dom)) {
             [].push.call(touch_obj, dom);
         } else if (my.jquery.isArray(dom)) {
+            [].push.apply(touch_obj, dom);
+        }else if(dom.length > 0){
             [].push.apply(touch_obj, dom);
         }
 
@@ -2520,5 +2565,45 @@ MyNeedExtend.prototype = {
                 return obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string';
             }
         return is_Dom(dom);
+    },
+    //鼠标上下滚轮事件(绑定的dom对象，向下滚动触发事件，向上滚动触发事件）
+    wheel: function (dom, fun1, fun2) {
+        var that = this;
+        //获取传入的arguments的个数
+        var argLen = arguments.length;
+        function scroll(event) {
+            var e = event || window.event;
+            if (e.wheelDelta) {
+                //除了firfox浏览器，别的浏览器的处理
+                wheel(-e.wheelDelta / 120, e);
+            } else if (e.detail) {
+                //firefox浏览器的测试
+                if (e.detail === -3) {
+                    wheel(-1, e);
+                } else if (e.detail === 3) {
+                    wheel(1, e);
+                } else {
+                    console.log("鼠标滚轮事件改了？", e.wheelDelta);
+                }
+            }
+
+            function wheel(index, event) {
+                if(index >= 0){
+                    //向下滚动
+                    if(argLen >= 2 && that.jquery.isFunction(fun1)){
+                        fun1.call(dom,event);
+                    }
+                }else if(index < 0){
+                    //向上滚动
+                    if(argLen >= 3 && that.jquery.isFunction(fun2)){
+                        fun2.call(dom,event);
+                    }
+                }
+            }
+        }
+
+        //添加监听事件
+        dom.addEventListener("mousewheel",scroll,false);
+        dom.addEventListener("DOMMouseScroll",scroll,false);
     }
 };
