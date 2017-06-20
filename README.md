@@ -1,4 +1,4 @@
-# ImageView() 仿微信图片查看方法
+# ImageView() 仿微信图片查看方法，案例文件ImageView.html
 ----------------
 > 仿微信图片交互，支持pc端html5版本，支持移动端横竖屏切换，支持屏幕自适应。
 >* 首先实例化对象，var myExtend = new MyNeedExtend();
@@ -8,7 +8,7 @@
 >>2. 第二个值需要是获取的原生dom对象传入
 >>3. 第三个值是数组，例子[{src:"images/img.jpg"},{src:"images/img2.jpg"},...]
 
-# DivImageView() 仿微信图片查看方法
+# DivImageView() 仿微信图片查看方法，案例文件DivImageView.html
 ----------------
 > 针对ImageView一个扩展，可以在图片上放置额外内容。
 > 缺点，只能一次处理一张图片
@@ -42,7 +42,7 @@
 > 里面扩展了三个方法div.initMore(dom)（内容添加完成后的回调），div.scaleCallback(dom)（缩放时的回调），div.touchendCallback(dom)（交互完成时的回调）
 > 在方法里面返回的dom就是创建的dom元素，根据dom对象获取相关信息。
 
-# MyNeedExtend.prototype.touch() 兼容全端的交互事件
+# MyNeedExtend.prototype.touch() 兼容全端的交互事件，案例文件touch.html
 -----------------------
 >兼容：兼容ie9+和移动端大部分版本，由于没有时间测试，希望大家使用完后给点意见。
 >使用：
