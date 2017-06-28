@@ -927,7 +927,8 @@ function MyNeedExtend() {
                 that.date.end = Number(new Date());
                 if (
                     (that.date.end - that.date.start <= that.settings.tapDurationThreshold) &&
-                    (Math.sqrt(Math.pow(Math.abs(that.touch.start.clientX - that.touch.end.clientX), 2) + Math.pow(Math.abs(that.touch.start.clientY - that.touch.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
+                    (Math.sqrt(Math.pow(Math.abs(that.touch.start.clientX - that.touch.end.clientX), 2) + Math.pow(Math.abs(that.touch.start.clientY - that.touch.end.clientY), 2)) < that.settings.scrollSupressionThreshold) &&
+                    e.button === 0
                 ) {
                     that.callback.call(that.dom, currentTarget);
                 }
@@ -1345,8 +1346,8 @@ function MyNeedExtend() {
             function createDom() {
                 that.picWrapWidth = that.picWrap.offsetWidth;////图片外框宽度
                 that.picWrapHeight = that.picWrap.offsetHeight;//图片外框高度
-                that.picWrapLeft = that.picWrap.offsetLeft;//图片外框的距离左侧距离
-                that.picWrapTop = that.picWrap.offsetTop;//图片外框距离顶部距离
+                that.picWrapLeft = that.picWrap.getBoundingClientRect().left;//图片外框的距离左侧距离
+                that.picWrapTop = that.picWrap.getBoundingClientRect().top;//图片外框距离顶部距离
                 that.prefix = my.getPrefix();
 
                 picWrap.style.overflow = "hidden";
@@ -1953,8 +1954,8 @@ function MyNeedExtend() {
             function createDom() {
                 that.picWrapWidth = that.picWrap.parentNode.offsetWidth;////图片外框宽度
                 that.picWrapHeight = that.picWrap.parentNode.offsetHeight;//图片外框高度
-                that.picWrapLeft = that.picWrapLeft || that.picWrap.parentNode.offsetLeft;//图片外框的距离左侧距离
-                that.picWrapTop = that.picWrapTop || that.picWrap.parentNode.offsetTop;//图片外框距离顶部距离
+                that.picWrapLeft = that.picWrap.parentNode.getBoundingClientRect().left;//图片外框的距离左侧距离
+                that.picWrapTop = that.picWrap.parentNode.getBoundingClientRect().top;//图片外框距离顶部距离
                 that.prefix = my.getPrefix();
 
                 picWrap.style.overflow = "hidden";
